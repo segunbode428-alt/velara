@@ -1,0 +1,18 @@
+services:
+  web:
+    image: node:22
+    working_dir: /app
+    volumes:
+      - ./:/app
+    environment:
+      - PORT=3000
+      - NODE_ENV=development
+    ports:
+      - "3000:3000"
+    command: sh -c "npm install && node index.js"
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/', r => process.exit(r.statusCode < 500 ? 0 : 1)).on('error', () => process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
